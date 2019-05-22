@@ -1,0 +1,1 @@
+this project use google cloudbuild to build a python image. The prosgresql database is also located in another container. Hence, we use "--network=host" in both 'run' method for django and postgresql to ensure they are in the same network
