@@ -1,0 +1,26 @@
+steps:
+  - id: 'pull-postgres'
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['pull', 'postgres']
+  - id: 'docker-run'
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['run', '--network', 'host', '-d', '-p', '5432:5432', '--name', 'brightwrite-postgres', 'postgres']
+  - id: 'sleep'
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['exec', 'brightwrite-postgres', 'sleep', '5']
+  - id: 'psql-create-db'
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['exec', 'brightwrite-postgres', 'psql', '-c', 'CREATE DATABASE ricky;', '-U', 'postgres']
+    waitFor: ['sleep']
+  - id: 'psql-create-user'
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['exec', 'brightwrite-postgres', 'psql', '-c', 'CREATE USER test WITH PASSWORD ''test'';', '-U', 'postgres']
+    waitFor: ['psql-create-db']
+  - id: 'build-image'
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/python-image', '.']
+  - id: 'run-python'
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['run', '--network', 'host', 'gcr.io/$PROJECT_ID/python-image', 'python3', 'hi.py']
+images:
+- 'gcr.io/$PROJECT_ID/python-image'
