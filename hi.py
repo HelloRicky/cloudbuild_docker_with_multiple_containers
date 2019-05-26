@@ -12,6 +12,6 @@ def doQuery( conn ) :
 
 print("Using psycopg2…")
 
-myConnection = psycopg2.connect( host=hostname, user='test1', password='test', dbname=database )
+myConnection = psycopg2.connect( host=hostname, user='test', password='test', dbname=database )
 doQuery( myConnection )
 myConnection.close()
