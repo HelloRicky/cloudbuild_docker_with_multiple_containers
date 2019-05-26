@@ -18,9 +18,9 @@ steps:
     waitFor: ['psql-create-db']
   - id: 'build-image'
     name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/python-image', '.']
+    args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/python-image:$BRANCH_NAME-$SHORT_SHA', '.']
   - id: 'run-python'
     name: 'gcr.io/cloud-builders/docker'
-    args: ['run', '--network', 'host', 'eu.gcr.io/$PROJECT_ID/python-image', 'python3', 'hi.py']
+    args: ['run', '--network', 'host', 'eu.gcr.io/$PROJECT_ID/python-image:$BRANCH_NAME-$SHORT_SHA', 'python3', 'hi.py']
 images:
-- 'eu.gcr.io/$PROJECT_ID/python-image'
+- 'eu.gcr.io/$PROJECT_ID/python-image:$BRANCH_NAME-$SHORT_SHA'
